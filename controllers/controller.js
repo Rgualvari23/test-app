@@ -4,13 +4,14 @@ const controller = {
   myIndex(req, res) {
     res.render("index", { title: "Express" });
   },
-  myUser(req, res) {
+  
+   myUser(req, res) {
     res.json({
       name: "Rodrigo",
       age: 28,
     });
   },
- 
+
   newUser: async (req, res) => {
     try {
       const user = new User(req.body);
@@ -23,6 +24,13 @@ const controller = {
       });
     }
   },
+
+  verUser: async (req, res) => {
+    const users = await User.find();
+    res.json({ users });
+  },
+
+  
 };
 
 module.exports = controller;
