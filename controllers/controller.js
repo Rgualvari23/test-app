@@ -1,11 +1,12 @@
 const { User } = require("../models/users");
+const {check, validationResult, body } = require ("express-validator"); 
 
 const controller = {
   myIndex(req, res) {
     res.render("index", { title: "Express" });
   },
-  
-   myUser(req, res) {
+
+  myUser(req, res) {
     res.json({
       name: "Rodrigo",
       age: 28,
@@ -14,9 +15,16 @@ const controller = {
 
   newUser: async (req, res) => {
     try {
-      const user = new User(req.body);
-      await user.save();
-      res.status(201).json(user);
+      const error = validationResult(req);
+      if (error.isEmpty()) {
+        const {name} = req.body;
+        const user = new User(req.body);
+        await user.save();
+        res.status(201).json(user);
+      } else {
+        res.status(501).json(error)
+      }
+
     } catch (err) {
       res.status(501).json({
         msg: "No se puede guardar el usuario en la DB, ese mail ya existe",
@@ -32,14 +40,12 @@ const controller = {
 
   eliminarUser: async (req, res) => {
     try {
-        const eliminarUser = await Checkout.findByIdAndDelete(req.params.id);
-        res.stauts(201).json({ mg: "usuario eliminado", eliminarUser });
-      }
-     catch (err) {
+      const eliminarUser = await Checkout.findByIdAndDelete(req.params.id);
+      res.stauts(201).json({ mg: "usuario eliminado", eliminarUser });
+    } catch (err) {
       res.status(501).json({ msg: "no se puedo eliminar al usuario", err });
     }
   },
-  
 };
 
 module.exports = controller;
