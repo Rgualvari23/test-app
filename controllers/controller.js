@@ -30,6 +30,15 @@ const controller = {
     res.json({ users });
   },
 
+  eliminarUser: async (req, res) => {
+    try {
+        const eliminarUser = await Checkout.findByIdAndDelete(req.params.id);
+        res.stauts(201).json({ mg: "usuario eliminado", eliminarUser });
+      }
+     catch (err) {
+      res.status(501).json({ msg: "no se puedo eliminar al usuario", err });
+    }
+  },
   
 };
 
